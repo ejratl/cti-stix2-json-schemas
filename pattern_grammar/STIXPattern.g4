@@ -41,9 +41,19 @@ comparisonExpressionAnd
   | propTest
   ;
 
+mathematicalExpression
+  : mathematicalExpression POWER_OP mathematicalExpression
+  | mathematicalExpression (DIVIDE|ASTERISK|MODULO) mathematicalExpression
+  | mathematicalExpression (PLUS|MINUS) mathematicalExpression
+  | LPAREN mathematicalExpression RPAREN
+  | mathematicalLiteral
+  ;
+
 propTest
   : objectPath NOT? (EQ|NEQ) primitiveLiteral       # propTestEqual
+  | objectPath NOT? (EQ|NEQ) mathematicalExpression # propTestMath
   | objectPath NOT? (GT|LT|GE|LE) orderableLiteral  # propTestOrder
+  | objectPath NOT? (GT|LT|GE|LE) mathematicalExpression  # propTestOrderMath
   | objectPath NOT? IN setLiteral                   # propTestSet
   | objectPath NOT? LIKE StringLiteral              # propTestLike
   | objectPath NOT? MATCHES StringLiteral           # propTestRegex
@@ -57,7 +67,8 @@ startStopQualifier
   ;
 
 withinQualifier
-  : WITHIN (IntPosLiteral|FloatPosLiteral) SECONDS
+  : WITHIN (mathematicalExpression) SECONDS
+  | WITHIN (IntPosLiteral|FloatPosLiteral) SECONDS
   ;
 
 repeatedQualifier
@@ -94,11 +105,15 @@ primitiveLiteral
   | BoolLiteral
   ;
 
-orderableLiteral
+mathematicalLiteral
   : IntPosLiteral
   | IntNegLiteral
   | FloatPosLiteral
   | FloatNegLiteral
+  ;
+
+orderableLiteral
+  : mathematicalLiteral
   | StringLiteral
   | BinaryLiteral
   | HexLiteral
@@ -211,6 +226,7 @@ MINUS     : '-' ;
 POWER_OP  : '^' ;
 DIVIDE    : '/' ;
 ASTERISK  : '*';
+MODULO    : '%';
 
 fragment HexDigit: [A-Fa-f0-9];
 fragment TwoHexDigits: HexDigit HexDigit;

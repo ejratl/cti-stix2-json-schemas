@@ -1,0 +1,4 @@
+pattern_grammar/*.class
+pattern_grammar/*.jar
+pattern_grammar/*.interp
+pattern_grammar/*.tokens
