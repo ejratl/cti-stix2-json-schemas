@@ -42,11 +42,22 @@ comparisonExpressionAnd
   ;
 
 mathematicalExpression
-  : mathematicalExpression POWER_OP mathematicalExpression
+  : mathematicalFunction LPAREN mathematicalExpression RPAREN
+  | mathematicalExpression POWER_OP mathematicalExpression
   | mathematicalExpression (DIVIDE|ASTERISK|MODULO) mathematicalExpression
   | mathematicalExpression (PLUS|MINUS) mathematicalExpression
   | LPAREN mathematicalExpression RPAREN
   | mathematicalLiteral
+  ;
+
+mathematicalFunction
+  : ABS
+  | LOG
+  | ROUND
+  | CEILING
+  | FLOOR
+  | COSINE
+  | SQRT
   ;
 
 propTest
@@ -193,6 +204,13 @@ FALSE:  'false' ;
 WITHIN:  'WITHIN' ;
 REPEATS:  'REPEATS' ;
 TIMES:  'TIMES' ;
+ABS: 'abs';
+LOG: 'ln';
+ROUND: 'round';
+CEILING: 'ceil';
+FLOOR: 'floor';
+COSINE: 'cos';
+SQRT: 'sqrt';
 
 // After keywords, so the lexer doesn't tokenize them as identifiers.
 // Object types may have unquoted hyphens, but property names
