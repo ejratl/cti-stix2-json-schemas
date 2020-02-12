@@ -31,14 +31,23 @@ observationExpression
   | observationExpression repeatedQualifier   # observationExpressionRepeated
   ;
 
-comparisonExpression
-  : <assoc=left> comparisonExpression OR comparisonExpression
+relationshipExpression
+  : LT StringLiteral GT
+  ;
+
+comparisonExpressionOr
+  : <assoc=left> comparisonExpressionOr OR comparisonExpressionOr
   | comparisonExpressionAnd
   ;
 
 comparisonExpressionAnd
   : <assoc=left> comparisonExpressionAnd AND comparisonExpressionAnd
   | propTest
+  ;
+
+comparisonExpression
+  : <assoc=left> comparisonExpression relationshipExpression comparisonExpression
+  | comparisonExpressionOr
   ;
 
 mathematicalExpression
@@ -267,3 +276,4 @@ LINE_COMMENT
 InvalidCharacter
     : .
     ;
+
